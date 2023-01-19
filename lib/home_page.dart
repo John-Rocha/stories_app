@@ -1,9 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:stories_app/detail_screen.dart';
 import 'package:stories_app/story_data.dart';
-
-import 'detail_screen.dart';
 
 var cardAspectRatio = 12.0 / 16.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
@@ -167,8 +168,11 @@ class _HomePageState extends State<HomePage> {
                           fontFamily: "Calibre-Semibold"),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.more_horiz_outlined,
-                          size: 40, color: Colors.white),
+                      icon: const Icon(
+                        Icons.more_horiz_outlined,
+                        size: 40,
+                        color: Colors.white,
+                      ),
                       onPressed: () {},
                     ),
                   ],
@@ -212,26 +216,22 @@ class _HomePageState extends State<HomePage> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(DetailScreen.routeName);
-                        },
-                        child: const _Favourites(
-                          title: "The Dreaming Moon",
-                          imageUrl: "assets/images/image_02.jpg",
-                        ),
-                      ),
-                      const _Favourites(
-                        title: "Fallen In Love",
-                        imageUrl: "assets/images/image_03.jpg",
-                      ),
-                      const _Favourites(
-                        title: "Hounted Ground",
-                        imageUrl: "assets/images/image_04.jpg",
-                      ),
-                    ],
+                    children: StoryData.stories
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                DetailScreen.routeName,
+                                arguments: e,
+                              );
+                            },
+                            child: _Favourites(
+                              title: e.title,
+                              imageUrl: e.image,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
@@ -278,6 +278,7 @@ class _Favourites extends StatelessWidget {
                 bottom: 15,
                 child: Text(
                   title,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -344,13 +345,15 @@ class _CardScrollWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.0),
               child: Container(
                 decoration: const BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black12,
-                          offset: Offset(3.0, 6.0),
-                          blurRadius: 10.0)
-                    ]),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(3.0, 6.0),
+                      blurRadius: 10.0,
+                    )
+                  ],
+                ),
                 child: AspectRatio(
                   aspectRatio: cardAspectRatio,
                   child: Stack(
@@ -365,27 +368,35 @@ class _CardScrollWidget extends StatelessWidget {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(titles[i],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25.0,
-                                      fontFamily: "SF-Pro-Text-Regular")),
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Text(
+                                titles[i],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25.0,
+                                  fontFamily: "SF-Pro-Text-Regular",
+                                ),
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
+                            const SizedBox(height: 10.0),
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 12.0, bottom: 12.0),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 22.0, vertical: 6.0),
+                                  horizontal: 22.0,
+                                  vertical: 6.0,
+                                ),
                                 decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: const Text("Read Later",
-                                    style: TextStyle(color: Colors.white)),
+                                  color: Colors.blueAccent,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: const Text(
+                                  "Read Later",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             )
                           ],
